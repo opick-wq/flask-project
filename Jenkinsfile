@@ -15,18 +15,14 @@ pipeline {
         }
 
         stage('Lint & Test') {
-            agent {
-                docker {
-                    image 'python:3.11'
-                    args '-u root'
-                }
-            }
             steps {
-                sh 'pip install flake8 pytest'
-                sh 'flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics'
-                sh 'pytest app/test_app.py'
+                sh '''
+                    docker run --rm -v "$PWD:/app" -w /app python:3.11 \
+                    /bin/bash -c "pip install flake8 pytest && flake8 app && pytest app/test_app.py"
+                '''
             }
         }
+
 
         stage('Build Docker Image') {
             steps {
