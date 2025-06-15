@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "sultan877/flask-rest-api"
         K8S_NAMESPACE = "flask-app-ns"
         // Ganti 'your-kubeconfig-credentials-id' dengan ID kredensial kubeconfig Anda di Jenkins
-        KUBE_CREDS_ID = 'your-kubeconfig-credentials-id' 
+        KUBE_CREDS_ID = 'kubeconfig-dev' 
     }
 
     stages {
