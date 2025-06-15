@@ -73,7 +73,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withKubeConfig(credentialsId: env.KUBE_CREDS_ID) {
+               withKubeConfig([credentialsId: 'kubeconfig-dev']) {
                     script {
                         echo "Applying Kubernetes manifests in namespace: ${K8S_NAMESPACE}"
                         sh "kubectl apply -f kubernetes/namespace.yaml"
