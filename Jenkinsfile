@@ -29,7 +29,7 @@ pipeline {
                     pip install flake8 pytest
                     
                     # 2. Instal dependensi aplikasi dari requirements.txt (INI YANG PENTING)
-                    pip install -r requirements.txt
+                    pip install -r app/requirements.txt
                     
                     echo "--- Running Linter ---"
                     flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
