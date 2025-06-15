@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/opick-wq/flask-project.git' // Ganti dengan URL repository Git Anda
+                git branch: 'main', url: 'https://github.com/opick-wq/flask-project.git'
             }
         }
 
