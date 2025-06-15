@@ -73,15 +73,16 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-               withKubeConfig([credentialsId: 'kubeconfig-dev']) {
+                withKubeConfig([credentialsId: 'kubeconfig-dev']) {
                     script {
                         echo "Applying Kubernetes manifests in namespace: ${K8S_NAMESPACE}"
-                        sh "kubectl apply -f kubernetes/namespace.yaml"
-                        sh "kubectl apply -f kubernetes/deployment.yaml -n ${K8S_NAMESPACE}"
-                        sh "kubectl apply -f kubernetes/service.yaml -n ${K8S_NAMESPACE}"
-                        
+        
+                        sh "kubectl apply -f kubernetes/namespace.yaml --insecure-skip-tls-verify"
+                        sh "kubectl apply -f kubernetes/deployment.yaml -n ${K8S_NAMESPACE} --insecure-skip-tls-verify"
+                        sh "kubectl apply -f kubernetes/service.yaml -n ${K8S_NAMESPACE} --insecure-skip-tls-verify"
+        
                         echo "Updating deployment image to ${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
-                        sh "kubectl set image deployment/flask-app-deployment flask-app=${DOCKER_IMAGE}:${env.BUILD_NUMBER} -n ${K8S_NAMESPACE}"
+                        sh "kubectl set image deployment/flask-app-deployment flask-app=${DOCKER_IMAGE}:${env.BUILD_NUMBER} -n ${K8S_NAMESPACE} --insecure-skip-tls-verify"
                     }
                 }
             }
