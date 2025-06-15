@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "sultan877/flask-rest-api"
         K8S_NAMESPACE = "flask-app-ns"
         // Ganti 'your-kubeconfig-credentials-id' dengan ID kredensial kubeconfig Anda di Jenkins
-        KUBE_CREDS_ID = 'your-kubeconfig-credentials-id'
+        KUBE_CREDS_ID = 'your-kubeconfig-credentials-id' 
     }
 
     stages {
@@ -17,11 +17,13 @@ pipeline {
 
         stage('Lint & Test') {
             steps {
-                // Gunakan virtual environment untuk menghindari error 'externally-managed-environment'
                 sh '''
                     echo "--- Setting up Python Virtual Environment ---"
                     python3 -m venv venv
-                    source venv/bin/activate
+                    
+                    echo "--- Activating Virtual Environment ---"
+                    # Gunakan '.' bukan 'source' agar kompatibel dengan shell default Jenkins
+                    . venv/bin/activate
                     
                     echo "--- Installing dependencies ---"
                     pip install flake8 pytest
@@ -52,7 +54,6 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Gunakan kredensial 'dockerhub-creds' dari Jenkins
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         echo "Logging in to Docker Hub..."
                         sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
@@ -69,8 +70,6 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                // Praktik terbaik: Gunakan withKubeconfig untuk mengelola akses ke cluster
-                // Ini lebih aman daripada hardcoding path kubeconfig
                 withKubeconfig(credentialsId: env.KUBE_CREDS_ID) {
                     script {
                         echo "Applying Kubernetes manifests in namespace: ${K8S_NAMESPACE}"
