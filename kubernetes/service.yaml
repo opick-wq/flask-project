@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-api-service
+  namespace: flask-app-ns
+  labels:
+    app: flask-api
+spec:
+  selector:
+    app: flask-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      nodePort: 30000 # Port yang akan dibuka di Node (Minikube)
+  type: NodePort

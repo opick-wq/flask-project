@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+*.egg-info/
+
+# Docker
+*.dockerignore
+.dockerenv
+
+# Kubernetes
+*.kubeconfig
+
+# Logs
+*.log
+
+# OS Specific
+.DS_Store
+Thumbs.db
