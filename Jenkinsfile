@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "sultan877/flask-rest-api"
         K8S_NAMESPACE = "flask-app-ns"
         // Ganti 'your-kubeconfig-credentials-id' dengan ID kredensial kubeconfig Anda di Jenkins
-        KUBE_CREDS_ID = 'kubeconfig-dev' 
+        KUBE_CREDS_ID = 'kubeconfig-dev'
     }
 
     stages {
@@ -22,11 +22,14 @@ pipeline {
                     python3 -m venv venv
                     
                     echo "--- Activating Virtual Environment ---"
-                    # Gunakan '.' bukan 'source' agar kompatibel dengan shell default Jenkins
                     . venv/bin/activate
                     
                     echo "--- Installing dependencies ---"
+                    # 1. Instal dependensi untuk testing (flake8, pytest)
                     pip install flake8 pytest
+                    
+                    # 2. Instal dependensi aplikasi dari requirements.txt (INI YANG PENTING)
+                    pip install -r requirements.txt
                     
                     echo "--- Running Linter ---"
                     flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
